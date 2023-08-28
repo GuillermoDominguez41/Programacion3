@@ -13,6 +13,8 @@ import javax.swing.SwingConstants;
 public class Interface {
 
 	private JFrame frame;
+	private Controller CTR;
+	private Integer[][] booleanBoard;
 
 	/** Launch the application **/
 	public static void main(String[] args) {
@@ -35,6 +37,9 @@ public class Interface {
 
 	/** Initialize the contents of the frame **/
 	private void initialize() {
+		Integer sizeBoard = 4;
+		CTR = new Controller(sizeBoard);
+		booleanBoard = CTR.getRandomBoard();
 		
 		frame = new JFrame();
 		frame.setTitle("Lights Out");
@@ -42,29 +47,32 @@ public class Interface {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-//	Panel principal de luces
-		
-		Integer size = 4;
-		
+		generarGrillaLuces(sizeBoard);
+	}
+
+	private void generarGrillaLuces(Integer sizeBoard) {
 		JPanel panelLuces = new JPanel();
 		panelLuces.setBounds(25, 64, 253, 248);
-		panelLuces.setLayout(new GridLayout(size, size, 2, 2));
+		panelLuces.setLayout(new GridLayout(sizeBoard, sizeBoard, 2, 2));
 		frame.getContentPane().add(panelLuces);
 		
-		for(Integer i = 0; i < (size*size); i++) {
-			// Reemplazar i por la posicion de la matriz, ejemplo 1_3 (fila/columna)
-			JTextField lbl_Luz = new JTextField( i.toString() );
-			lbl_Luz.setName( i.toString() );
-			lbl_Luz.setHorizontalAlignment(SwingConstants.CENTER);
-			lbl_Luz.setBackground(Color.RED);
-			lbl_Luz.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					System.out.println( e.getComponent().getName() );
-				}
-			});
-			panelLuces.add(lbl_Luz);
+		for (Integer row = 0; row < booleanBoard[0].length; row++) {
+			for (Integer col = 0; col < booleanBoard[0].length; col++) {
+				Integer valCurrent = booleanBoard[row][col];
+				String posCurrent = (row+1)+"-"+(col+1);
+				
+				JTextField lbl_Luz = new JTextField( valCurrent.toString() );
+				lbl_Luz.setName( posCurrent );
+				lbl_Luz.setHorizontalAlignment(SwingConstants.CENTER);
+				lbl_Luz.setBackground(Color.RED);
+				lbl_Luz.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						System.out.println( e.getComponent().getName() );
+					}
+				});
+				panelLuces.add(lbl_Luz);
+			}
 		}
-		
 	}
 }
