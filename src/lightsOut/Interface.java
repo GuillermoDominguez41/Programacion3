@@ -15,7 +15,7 @@ public class Interface {
 	private JFrame frame;
 	private Controller CTR;
 
-	private JPanel panelLuces;
+	private JPanel panelLight;
 
 	/** Launch the application **/
 	public static void main(String[] args) {
@@ -41,65 +41,69 @@ public class Interface {
 		Integer sizeBoard = 4;
 		CTR = new Controller(sizeBoard);
 
+		createAppWindow();
+		createPanelLights(sizeBoard);
+		addLightsToPanel(sizeBoard, CTR.getBoard());
+	}
+	
+	public void createAppWindow() {
 		frame = new JFrame();
 		frame.setTitle("Lights Out");
 		frame.setBounds(100, 200, 600, 500);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		generarPanelLuces(sizeBoard);
-		actualizarGrilla(sizeBoard);
-
 	}
 
-	private void actualizarGrilla(Integer sizeBoard) {
-
-		if (panelLuces != null) {
-			panelLuces.removeAll();
-		}
-
-		CTR.showBoard();
-		aniadirLucesPanel(sizeBoard, CTR.getBoard());
-		frame.repaint();
+	public void createPanelLights(Integer sizeBoard) {
+		panelLight = new JPanel();
+		panelLight.setBounds(25, 64, 253, 248);
+		panelLight.setLayout(new GridLayout(sizeBoard, sizeBoard, 2, 2));
+		frame.getContentPane().add(panelLight);
 	}
 
-	public void generarPanelLuces(Integer sizeBoard) {
-		panelLuces = new JPanel();
-		panelLuces.setBounds(25, 64, 253, 248);
-		panelLuces.setLayout(new GridLayout(sizeBoard, sizeBoard, 2, 2));
+	private void addLightsToPanel(Integer sizeBoard, Integer[][] booleanBoard) {
 
-		frame.getContentPane().add(panelLuces);
-		
-		
-
-	}
-
-	private void aniadirLucesPanel(Integer sizeBoard, Integer[][] booleanBoard) {
-		System.out.println("entra");
-		
+		Integer lightIndex = 0;
 		for (Integer row = 0; row < booleanBoard[0].length; row++) {
-	
 			for (Integer col = 0; col < booleanBoard[0].length; col++) {
-
 				Integer valCurrent = booleanBoard[row][col];
-				String posCurrent = (row) + "-" + (col);
-				System.out.println(posCurrent);
-				JTextField lbl_Luz = new JTextField(valCurrent.toString());
-				lbl_Luz.setName(posCurrent);
-				lbl_Luz.setHorizontalAlignment(SwingConstants.CENTER);
-				lbl_Luz.addMouseListener(new MouseAdapter() {
+				String posCurrent = "Row:" + row + " Col:" + col + " Index:" + lightIndex;
+				JTextField light = new JTextField(valCurrent.toString());
+				light.setName(posCurrent);
+				light.setHorizontalAlignment(SwingConstants.CENTER);
+				light.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
+						// ONLY FOR TESTING!!!
 						System.out.println(e.getComponent().getName());
+						// END OF TEST
 						CTR.updateBoard(e.getComponent().getName());
-						actualizarGrilla(sizeBoard);
+						updateLightsToPanel(sizeBoard, CTR.getBoard());
 					}
 				});
-
 				Color background = valCurrent == 0 ? Color.BLACK : Color.GREEN;
-				lbl_Luz.setBackground(background);
+				light.setBackground(background);
 
-				panelLuces.add(lbl_Luz);
+				panelLight.add(light);
+				lightIndex++;
 			}
 		}
 	}
+	
+	private void updateLightsToPanel(Integer sizeBoard, Integer[][] booleanBoard) {
+		Integer lightIndex = 0;
+		for (Integer row = 0; row < booleanBoard[0].length; row++) {
+			for (Integer col = 0; col < booleanBoard[0].length; col++) {
+				JTextField componentCurrent = (JTextField) panelLight.getComponent(lightIndex);
+				Integer valCurrent = booleanBoard[row][col];
+				componentCurrent.setText(valCurrent.toString());
+				Color background = valCurrent == 0 ? Color.BLACK : Color.GREEN;
+				componentCurrent.setBackground(background);
+
+				lightIndex++;
+			}
+		}
+		frame.repaint();
+	}
+	
 }
