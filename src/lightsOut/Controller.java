@@ -6,13 +6,23 @@ public class Controller {
 	public Controller(Integer size) {
 		MN = new Main(size);
 	}
-	
+
 	public Integer[][] getBoard() {
 		return MN.getRandomBoard();
+	}
+
+	public Integer getSizeBoard() {
+		return MN.getSize();
 	}
 
 	public void updateBoard(String position) {
 		MN.updateBoard(position);
 		MN.showBoard();
+	}
+
+	public void showBoard() {
+
+		MN.showBoard();
+
 	}
 }
