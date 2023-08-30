@@ -17,12 +17,10 @@ public class Controller {
 
 	public void updateBoard(String position) {
 		MN.updateBoard(position);
-		MN.showBoard();
 	}
 
 	public void showBoard() {
-
 		MN.showBoard();
-
 	}
+	
 }
