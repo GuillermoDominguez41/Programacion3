@@ -39,7 +39,7 @@ public class Interface {
 	private void initialize() {
 		Integer sizeBoard = 4;
 		CTR = new Controller(sizeBoard);
-		booleanBoard = CTR.getRandomBoard();
+		booleanBoard = CTR.getBoard();
 		
 		frame = new JFrame();
 		frame.setTitle("Lights Out");
@@ -64,13 +64,19 @@ public class Interface {
 				JTextField lbl_Luz = new JTextField( valCurrent.toString() );
 				lbl_Luz.setName( posCurrent );
 				lbl_Luz.setHorizontalAlignment(SwingConstants.CENTER);
-				lbl_Luz.setBackground(Color.RED);
 				lbl_Luz.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						System.out.println( e.getComponent().getName() );
+						CTR.updateBoard( e.getComponent().getName() );
+						CTR.getBoard();
+						frame.repaint();
 					}
 				});
+				
+				Color background = valCurrent == 0 ? Color.BLACK : Color.GREEN;
+				lbl_Luz.setBackground(background);
+				
 				panelLuces.add(lbl_Luz);
 			}
 		}

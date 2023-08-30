@@ -7,8 +7,12 @@ public class Controller {
 		MN = new Main(size);
 	}
 	
-	public Integer[][] getRandomBoard() {
+	public Integer[][] getBoard() {
 		return MN.getRandomBoard();
 	}
-	
+
+	public void updateBoard(String position) {
+		MN.updateBoard(position);
+		MN.showBoard();
+	}
 }
