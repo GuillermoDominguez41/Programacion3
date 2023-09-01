@@ -7,7 +7,7 @@ public class Controller {
 		MN = new Main(size);
 	}
 
-	public Integer[][] getBoard() {
+	public boolean[][] getBoard() {
 		return MN.getRandomBoard();
 	}
 

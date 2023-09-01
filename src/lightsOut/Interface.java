@@ -61,14 +61,14 @@ public class Interface {
 		frame.getContentPane().add(panelLight);
 	}
 
-	private void addLightsToPanel(Integer sizeBoard, Integer[][] booleanBoard) {
+	private void addLightsToPanel(Integer sizeBoard, boolean[][] booleanBoard) {
 
 		Integer lightIndex = 0;
 		for (Integer row = 0; row < booleanBoard[0].length; row++) {
 			for (Integer col = 0; col < booleanBoard[0].length; col++) {
-				Integer valCurrent = booleanBoard[row][col];
+				boolean valCurrent = booleanBoard[row][col];
 				String posCurrent = "Row:" + row + " Col:" + col + " Index:" + lightIndex;
-				JTextField light = new JTextField(valCurrent.toString());
+				JTextField light = new JTextField(String.valueOf(valCurrent));
 				light.setName(posCurrent);
 				light.setHorizontalAlignment(SwingConstants.CENTER);
 				light.addMouseListener(new MouseAdapter() {
@@ -81,7 +81,7 @@ public class Interface {
 						updateLightsToPanel(sizeBoard, CTR.getBoard());
 					}
 				});
-				Color background = valCurrent == 0 ? Color.BLACK : Color.GREEN;
+				Color background = valCurrent == false ? Color.BLACK : Color.GREEN;
 				light.setBackground(background);
 
 				panelLight.add(light);
@@ -90,14 +90,14 @@ public class Interface {
 		}
 	}
 	
-	private void updateLightsToPanel(Integer sizeBoard, Integer[][] booleanBoard) {
+	private void updateLightsToPanel(Integer sizeBoard, boolean[][] booleanBoard) {
 		Integer lightIndex = 0;
 		for (Integer row = 0; row < booleanBoard[0].length; row++) {
 			for (Integer col = 0; col < booleanBoard[0].length; col++) {
 				JTextField componentCurrent = (JTextField) panelLight.getComponent(lightIndex);
-				Integer valCurrent = booleanBoard[row][col];
-				componentCurrent.setText(valCurrent.toString());
-				Color background = valCurrent == 0 ? Color.BLACK : Color.GREEN;
+				boolean valCurrent = booleanBoard[row][col];
+				componentCurrent.setText(String.valueOf(valCurrent));
+				Color background = valCurrent == false ? Color.BLACK : Color.GREEN;
 				componentCurrent.setBackground(background);
 
 				lightIndex++;
