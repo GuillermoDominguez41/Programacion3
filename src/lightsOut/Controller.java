@@ -22,5 +22,16 @@ public class Controller {
 	public void showBoard() {
 		MN.showBoard();
 	}
-	
+
+	public Integer consultarTurnos() {
+		return MN.getTurnos();
+	}
+
+	public void incrementarTurnos() {
+		MN.incrementarTurno();
+	}
+
+	public boolean juegoTerminado() {
+		return MN.juegoTerminado();
+	}
 }

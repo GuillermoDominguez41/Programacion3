@@ -9,13 +9,16 @@ import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.SwingConstants;
+import javax.swing.JLabel;
 
 public class Interface {
 
 	private JFrame frame;
 	private Controller CTR;
-
 	private JPanel panelLight;
+	private JPanel panelTurnos;
+
+	JLabel lblTurno;
 
 	/** Launch the application **/
 	public static void main(String[] args) {
@@ -44,8 +47,10 @@ public class Interface {
 		createAppWindow();
 		createPanelLights(sizeBoard);
 		addLightsToPanel(sizeBoard, CTR.getBoard());
+		generarTableroTurnos();
+
 	}
-	
+
 	public void createAppWindow() {
 		frame = new JFrame();
 		frame.setTitle("Lights Out");
@@ -59,6 +64,22 @@ public class Interface {
 		panelLight.setBounds(25, 64, 253, 248);
 		panelLight.setLayout(new GridLayout(sizeBoard, sizeBoard, 2, 2));
 		frame.getContentPane().add(panelLight);
+
+	}
+
+	private void generarTableroTurnos() {
+		panelTurnos = new JPanel();
+		panelTurnos.setBounds(360, 34, 214, 40);
+		frame.getContentPane().add(panelTurnos);
+
+		JLabel lblTituloTurno = new JLabel("Turnos");
+		lblTituloTurno.setHorizontalAlignment(SwingConstants.CENTER);
+		panelTurnos.add(lblTituloTurno);
+
+		lblTurno = new JLabel(CTR.consultarTurnos().toString());
+		lblTurno.setHorizontalAlignment(SwingConstants.CENTER);
+		panelTurnos.add(lblTurno);
+
 	}
 
 	private void addLightsToPanel(Integer sizeBoard, boolean[][] booleanBoard) {
@@ -74,11 +95,16 @@ public class Interface {
 				light.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
+
 						// ONLY FOR TESTING!!!
 						System.out.println(e.getComponent().getName());
 						// END OF TEST
-						CTR.updateBoard(e.getComponent().getName());
-						updateLightsToPanel(sizeBoard, CTR.getBoard());
+
+						updateLightsToPanel(sizeBoard, CTR.getBoard(), e.getComponent().getName());
+						actualizarTurno();
+						if (CTR.juegoTerminado()) {
+							finalizarJuego();
+						}
 					}
 				});
 				Color background = valCurrent == false ? Color.BLACK : Color.GREEN;
@@ -89,8 +115,9 @@ public class Interface {
 			}
 		}
 	}
-	
-	private void updateLightsToPanel(Integer sizeBoard, boolean[][] booleanBoard) {
+
+	private void updateLightsToPanel(Integer sizeBoard, boolean[][] booleanBoard, String posicion) {
+		CTR.updateBoard(posicion);
 		Integer lightIndex = 0;
 		for (Integer row = 0; row < booleanBoard[0].length; row++) {
 			for (Integer col = 0; col < booleanBoard[0].length; col++) {
@@ -101,9 +128,37 @@ public class Interface {
 				componentCurrent.setBackground(background);
 
 				lightIndex++;
+
 			}
 		}
+
+		frame.repaint();
+
+	}
+
+	private void actualizarTurno() {
+		CTR.incrementarTurnos();
+		lblTurno.setText(CTR.consultarTurnos().toString());
+
 		frame.repaint();
 	}
-	
+
+	private void finalizarJuego() {
+		frame.setBounds(100, 200, 600, 500);
+		frame.getContentPane().setLayout(new GridLayout(1, 1, 2, 2));
+		frame.getContentPane().removeAll();
+		JPanel panelGanaste = new JPanel();
+
+		//panelGanaste.setBounds(0, 0, frame.getBounds().width/2, frame.getBounds().height/2);
+
+		panelGanaste.setLayout(new GridLayout(1, 1, 2, 2));
+		
+		JLabel lblGanaste = new JLabel("Ganaste");
+		lblGanaste.setHorizontalAlignment(SwingConstants.CENTER);
+		panelGanaste.add(lblGanaste);
+		frame.getContentPane().add(panelGanaste);
+		frame.repaint();
+
+	}
+
 }

@@ -6,10 +6,13 @@ public class Main {
 
 	private boolean[][] board;
 	private Integer sizeBoard;
+	private Integer turnos;
 
 	public Main(Integer size) {
 		sizeBoard = size;
-		board = createRandomBoard();
+		// board = createRandomBoard();
+		board = crearTableroPreseteado(size); // Solo para testeo
+		turnos = 0;
 	}
 
 	protected boolean[][] createRandomBoard() {
@@ -33,12 +36,12 @@ public class Main {
 	public Integer getSize() {
 		return sizeBoard;
 	}
-	
+
 	public void updateBoard(String position) {
 		Integer row, col;
 		if (position != null) {
-			row = Integer.parseInt( position.substring(4, 6).replace(" ", "") );
-			col = Integer.parseInt( position.substring(10, 12).replace(" ", "") );
+			row = Integer.parseInt(position.substring(4, 6).replace(" ", ""));
+			col = Integer.parseInt(position.substring(10, 12).replace(" ", ""));
 			toggleValueRow(row);
 			toggleValueColumn(row, col);
 		}
@@ -60,6 +63,28 @@ public class Main {
 		}
 	}
 
+	public Integer getTurnos() {
+		return turnos;
+	}
+
+	public void incrementarTurno() {
+		turnos++;
+	}
+
+	public boolean juegoTerminado() {
+
+		for (Integer row = 0; row < board.length; row++) {
+			
+			for (Integer col = 0; col < board[0].length; col++) {
+				if(board[row][col]==false) {
+					return false;
+				}
+			}
+
+		}
+		return true;
+	}
+
 	// ONLY FOR TESTING FUNCTIONS !!!
 	protected void showBoard() {
 		StringBuilder st = new StringBuilder();
@@ -71,6 +96,23 @@ public class Main {
 		}
 		System.out.print(st.toString() + "\n");
 	}
+
+	protected boolean[][] crearTableroPreseteado(Integer sizeBoard) {
+		boolean[][] testBoolean = new boolean[sizeBoard][sizeBoard];
+
+		for (Integer row = 0; row < testBoolean[0].length; row++) {
+			if (row != 0) {
+				for (Integer col = 0; col < testBoolean[0].length; col++) {
+					if (col != 0)
+						testBoolean[row][col] = true;
+				}
+			}
+		}
+
+		return testBoolean;
+
+	}
+
 	// END OF TEST
 
 }
