@@ -16,9 +16,7 @@ public class Interface {
 	private JFrame frame;
 	private Controller CTR;
 	private JPanel panelLight;
-	private JPanel panelTurnos;
-
-	JLabel lblTurno;
+	private JLabel lblTurn;
 
 	/** Launch the application **/
 	public static void main(String[] args) {
@@ -47,8 +45,7 @@ public class Interface {
 		createAppWindow();
 		createPanelLights(sizeBoard);
 		addLightsToPanel(sizeBoard, CTR.getBoard());
-		generarTableroTurnos();
-
+		createTurnsBoard();
 	}
 
 	public void createAppWindow() {
@@ -64,26 +61,23 @@ public class Interface {
 		panelLight.setBounds(25, 64, 253, 248);
 		panelLight.setLayout(new GridLayout(sizeBoard, sizeBoard, 2, 2));
 		frame.getContentPane().add(panelLight);
-
 	}
 
-	private void generarTableroTurnos() {
-		panelTurnos = new JPanel();
-		panelTurnos.setBounds(360, 34, 214, 40);
-		frame.getContentPane().add(panelTurnos);
+	private void createTurnsBoard() {
+		JPanel panelTurns = new JPanel();
+		panelTurns.setBounds(360, 34, 214, 40);
+		frame.getContentPane().add(panelTurns);
 
-		JLabel lblTituloTurno = new JLabel("Turnos");
-		lblTituloTurno.setHorizontalAlignment(SwingConstants.CENTER);
-		panelTurnos.add(lblTituloTurno);
+		JLabel lblTitleTurn = new JLabel("Turnos");
+		lblTitleTurn.setHorizontalAlignment(SwingConstants.CENTER);
+		panelTurns.add(lblTitleTurn);
 
-		lblTurno = new JLabel(CTR.consultarTurnos().toString());
-		lblTurno.setHorizontalAlignment(SwingConstants.CENTER);
-		panelTurnos.add(lblTurno);
-
+		lblTurn = new JLabel(CTR.getTurn().toString());
+		lblTurn.setHorizontalAlignment(SwingConstants.CENTER);
+		panelTurns.add(lblTurn);
 	}
 
 	private void addLightsToPanel(Integer sizeBoard, boolean[][] booleanBoard) {
-
 		Integer lightIndex = 0;
 		for (Integer row = 0; row < booleanBoard[0].length; row++) {
 			for (Integer col = 0; col < booleanBoard[0].length; col++) {
@@ -95,70 +89,55 @@ public class Interface {
 				light.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
-
-						// ONLY FOR TESTING!!!
-						System.out.println(e.getComponent().getName());
-						// END OF TEST
-
 						updateLightsToPanel(sizeBoard, CTR.getBoard(), e.getComponent().getName());
-						actualizarTurno();
-						if (CTR.juegoTerminado()) {
-							finalizarJuego();
+						updateTurn();
+						
+						if (CTR.gameComplete()) {
+							endGame();
 						}
 					}
 				});
 				Color background = valCurrent == false ? Color.BLACK : Color.GREEN;
 				light.setBackground(background);
-
 				panelLight.add(light);
 				lightIndex++;
 			}
 		}
 	}
 
-	private void updateLightsToPanel(Integer sizeBoard, boolean[][] booleanBoard, String posicion) {
-		CTR.updateBoard(posicion);
+	private void updateLightsToPanel(Integer sizeBoard, boolean[][] booleanBoard, String position) {
+		CTR.updateBoard(position);
 		Integer lightIndex = 0;
-		for (Integer row = 0; row < booleanBoard[0].length; row++) {
-			for (Integer col = 0; col < booleanBoard[0].length; col++) {
+		for (boolean[] row : booleanBoard) {
+			for (boolean elem : row) {
 				JTextField componentCurrent = (JTextField) panelLight.getComponent(lightIndex);
-				boolean valCurrent = booleanBoard[row][col];
-				componentCurrent.setText(String.valueOf(valCurrent));
-				Color background = valCurrent == false ? Color.BLACK : Color.GREEN;
+				componentCurrent.setText(String.valueOf(elem));
+				Color background = elem == false ? Color.BLACK : Color.GREEN;
 				componentCurrent.setBackground(background);
-
 				lightIndex++;
-
 			}
 		}
-
-		frame.repaint();
-
-	}
-
-	private void actualizarTurno() {
-		CTR.incrementarTurnos();
-		lblTurno.setText(CTR.consultarTurnos().toString());
-
 		frame.repaint();
 	}
 
-	private void finalizarJuego() {
-		frame.setBounds(100, 200, 600, 500);
-		frame.getContentPane().setLayout(new GridLayout(1, 1, 2, 2));
-		frame.getContentPane().removeAll();
+	private void updateTurn() {
+		CTR.increaseTurn();
+		lblTurn.setText(CTR.getTurn().toString());
+		frame.repaint();
+	}
+
+	private void endGame() {		
 		JPanel panelGanaste = new JPanel();
-
-		//panelGanaste.setBounds(0, 0, frame.getBounds().width/2, frame.getBounds().height/2);
-
-		panelGanaste.setLayout(new GridLayout(1, 1, 2, 2));
-		
+		panelGanaste.setLayout(new GridLayout());
 		JLabel lblGanaste = new JLabel("Ganaste");
 		lblGanaste.setHorizontalAlignment(SwingConstants.CENTER);
 		panelGanaste.add(lblGanaste);
+		
+		frame.setBounds(100, 200, 600, 500);
+		frame.getContentPane().setLayout(new GridLayout());
+		frame.getContentPane().removeAll();
 		frame.getContentPane().add(panelGanaste);
 		frame.repaint();
-
 	}
 
 }

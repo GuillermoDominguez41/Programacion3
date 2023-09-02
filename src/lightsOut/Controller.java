@@ -23,15 +23,15 @@ public class Controller {
 		MN.showBoard();
 	}
 
-	public Integer consultarTurnos() {
-		return MN.getTurnos();
+	public Integer getTurn() {
+		return MN.getTurn();
 	}
 
-	public void incrementarTurnos() {
-		MN.incrementarTurno();
+	public void increaseTurn() {
+		MN.increaseTurn();
 	}
 
-	public boolean juegoTerminado() {
-		return MN.juegoTerminado();
+	public boolean gameComplete() {
+		return MN.gameComplete();
 	}
 }

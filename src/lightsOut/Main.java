@@ -6,27 +6,28 @@ public class Main {
 
 	private boolean[][] board;
 	private Integer sizeBoard;
-	private Integer turnos;
+	private Integer turn;
 
 	public Main(Integer size) {
 		sizeBoard = size;
+		turn = 0;
+		
+	// ONLY FOR TESTING!!!
 		// board = createRandomBoard();
-		board = crearTableroPreseteado(size); // Solo para testeo
-		turnos = 0;
+		board = createPreconfiguredBoard(size);
+		showBoard();
+	// END OF TEST			
 	}
-
-	protected boolean[][] createRandomBoard() {
-		board = new boolean[sizeBoard][sizeBoard];
+	
+	protected boolean[][] createRandomBoard(Integer sizeBoard) {
+		boolean[][] newBoard = new boolean[sizeBoard][sizeBoard];
 		Random rand = new Random();
-		for (Integer row = 0; row < board.length; row++) {
-			for (Integer col = 0; col < board[row].length; col++) {
-				board[row][col] = rand.nextBoolean();
+		for (Integer row = 0; row < newBoard.length; row++) {
+			for (Integer col = 0; col < newBoard[row].length; col++) {
+				newBoard[row][col] = rand.nextBoolean();
 			}
 		}
-		// ONLY FOR TESTING!!!
-		showBoard();
-		// END OF TEST
-		return board;
+		return newBoard;
 	}
 
 	public boolean[][] getRandomBoard() {
@@ -55,7 +56,7 @@ public class Main {
 	}
 
 	public void toggleValueColumn(Integer row, Integer col) {
-		for (Integer fil = 0; fil < board[0].length; fil++) {
+		for (Integer fil = 0; fil < board.length; fil++) {
 			boolean currentItem = board[fil][col];
 			if (fil != row) {
 				board[fil][col] = currentItem == false ? true : false;
@@ -63,56 +64,48 @@ public class Main {
 		}
 	}
 
-	public Integer getTurnos() {
-		return turnos;
+	public Integer getTurn() {
+		return turn;
 	}
 
-	public void incrementarTurno() {
-		turnos++;
+	public void increaseTurn() {
+		turn++;
 	}
 
-	public boolean juegoTerminado() {
-
+	public boolean gameComplete() {
 		for (Integer row = 0; row < board.length; row++) {
-			
 			for (Integer col = 0; col < board[0].length; col++) {
-				if(board[row][col]==false) {
+				if(board[row][col]==false)
 					return false;
-				}
 			}
-
 		}
 		return true;
 	}
 
-	// ONLY FOR TESTING FUNCTIONS !!!
+// ONLY FOR TESTING FUNCTIONS !!!
 	protected void showBoard() {
 		StringBuilder st = new StringBuilder();
-		for (Integer row = 0; row < board[0].length; row++) {
-			for (Integer col = 0; col < board[0].length; col++) {
-				st.append(board[row][col] + " ");
+		for(boolean[] row : board) {
+			for(boolean elem : row) {
+				st.append( elem + " ");
 			}
 			st.append("\n");
-		}
+		}	
 		System.out.print(st.toString() + "\n");
 	}
 
-	protected boolean[][] crearTableroPreseteado(Integer sizeBoard) {
-		boolean[][] testBoolean = new boolean[sizeBoard][sizeBoard];
-
-		for (Integer row = 0; row < testBoolean[0].length; row++) {
+	protected boolean[][] createPreconfiguredBoard(Integer sizeBoard) {
+		boolean[][] newBoard = new boolean[sizeBoard][sizeBoard];
+		for (Integer row = 0; row < newBoard.length; row++) {
 			if (row != 0) {
-				for (Integer col = 0; col < testBoolean[0].length; col++) {
+				for (Integer col = 0; col < newBoard[0].length; col++) {
 					if (col != 0)
-						testBoolean[row][col] = true;
+						newBoard[row][col] = true;
 				}
 			}
 		}
-
-		return testBoolean;
-
+		return newBoard;	
 	}
-
-	// END OF TEST
+// END OF TEST
 
 }
