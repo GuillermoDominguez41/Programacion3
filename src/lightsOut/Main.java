@@ -1,5 +1,7 @@
 package lightsOut;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Random;
 
 public class Main {
@@ -7,16 +9,24 @@ public class Main {
 	private boolean[][] board;
 	private Integer sizeBoard;
 	private Integer turn;
+	private Integer sizeMin;
+	private Integer sizeMax;
+	private Integer percentCompleted;
 
 	public Main(Integer size) {
 		sizeBoard = size;
 		turn = 0;
+		sizeMin = 4;
+		sizeMax = 6;
+		percentCompleted = 0;
 		
 	// ONLY FOR TESTING!!!
-		// board = createRandomBoard();
-		board = createPreconfiguredBoard(size);
+		 board = createRandomBoard(size);
+//		board = createPreconfiguredBoard(size);
 		showBoard();
-	// END OF TEST			
+	// END OF TEST		
+		
+		updatePercentCompleted();
 	}
 	
 	protected boolean[][] createRandomBoard(Integer sizeBoard) {
@@ -72,6 +82,33 @@ public class Main {
 		turn++;
 	}
 
+	public Integer getBoardSizeMin() {
+		return sizeMin;
+	}
+
+	public Integer getBoardSizeMax() {
+		return sizeMax;
+	}
+	
+	public void updatePercentCompleted() {
+		Integer acumLight = 0;
+		Integer acumLightsOff = 0;
+		
+		for(boolean[] row : board) {
+			for(boolean elem : row) {
+				acumLight++;
+				if(elem == false)
+					acumLightsOff++;
+			}
+		}
+		float decCompleted = (float) acumLightsOff/acumLight;
+		percentCompleted = (int) (decCompleted*100);
+	}
+	
+	public Integer getPercentCompleted() {
+		return percentCompleted;
+	}
+	
 	public boolean gameComplete() {
 		for (Integer row = 0; row < board.length; row++) {
 			for (Integer col = 0; col < board[0].length; col++) {

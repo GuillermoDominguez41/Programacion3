@@ -34,4 +34,20 @@ public class Controller {
 	public boolean gameComplete() {
 		return MN.gameComplete();
 	}
+	
+	public Integer getBoardSizeMin() {
+		return MN.getBoardSizeMin();
+	}
+
+	public Integer getBoardSizeMax() {
+		return MN.getBoardSizeMax();
+	}
+	
+	public void updatePercentCompleted() {
+		MN.updatePercentCompleted();
+	}
+	
+	public Integer getPercentCompleted() {
+		return MN.getPercentCompleted();
+	}
 }
