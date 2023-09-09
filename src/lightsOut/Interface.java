@@ -11,22 +11,29 @@ import java.awt.event.MouseEvent;
 import javax.swing.SwingConstants;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
 import javax.swing.JComboBox;
 import javax.swing.JTextPane;
 import javax.swing.JTable;
 import java.awt.Font;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JButton;
 
 public class Interface {
 
 	private JFrame frame;
 	private Controller CTR;
 	private JPanel panelLight;
+	private JPanel panelGameStatus;
 	private JTextField lblTurn;
 	private JTextField txtPlayer;
 	private JProgressBar progressBar;
 	private Color lightOff;
 	private Color lightOn;
+	private JComboBox<Integer> cbxSize;
+	private JButton btnStartGame;
 
 	/** Launch the application **/
 	public static void main(String[] args) {
@@ -49,17 +56,12 @@ public class Interface {
 
 	/** Initialize the contents of the frame **/
 	private void initialize() {
-		Integer sizeBoard = 4;
-		CTR = new Controller(sizeBoard);
+		CTR = new Controller();
 		lightOff = new Color(187, 196, 187);
 		lightOn = new Color(137, 234, 120);
 
 		createAppWindow();
 		createPanelInfo();
-		createPanelLights(sizeBoard);
-		addLightsToPanel(sizeBoard, CTR.getBoard());
-		createPanelStatus();
-//		createTurnsBoard();
 	}
 
 	public void createAppWindow() {
@@ -83,7 +85,7 @@ public class Interface {
 		lblTitleSize.setBounds(10, 10, 231, 13);
 		panelGameInfo.add(lblTitleSize);
 
-		JComboBox<Integer> cbxSize = new JComboBox<Integer>();
+		cbxSize = new JComboBox<Integer>();
 		cbxSize.setBounds(10, 28, 90, 21);
 		for(int i=CTR.getBoardSizeMin(); i<=CTR.getBoardSizeMax(); i++ )
 			cbxSize.addItem(i);
@@ -95,7 +97,7 @@ public class Interface {
 		lblTitlePlayer.setBounds(10, 60, 231, 13);
 		panelGameInfo.add(lblTitlePlayer);
 
-		txtPlayer = new JTextField();
+		txtPlayer = new JTextField("AAA");
 		txtPlayer.setBounds(10, 78, 90, 20);
 		panelGameInfo.add(txtPlayer);
 
@@ -111,10 +113,27 @@ public class Interface {
 		txtInstructions.setText("Lights Out es un juego de puzzle que consiste en una cuadrícula de luces que están encendidas (verde claro) o apagadas (verde oscuro). Al pulsar una luz se activan todas las luces de su fila y columna. El objetivo del juego es apagar todas las luces.");
 		txtInstructions.setBounds(10, 133, 231, 112);
 		panelGameInfo.add(txtInstructions);
+		
+		btnStartGame = new JButton("Iniciar Juego");
+		btnStartGame.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Integer size = Integer.parseInt(cbxSize.getSelectedItem().toString());
+				btnStartGame.setText("Nuevo Juego");
+				CTR.createBoard(size);
+				createPanelLights(size);
+				addLightsToPanel(size, CTR.getBoard());
+				createPanelStatus();
+				frame.repaint();
+			}
+		});
+		btnStartGame.setFont(new Font("Tahoma", Font.BOLD, 13));
+		btnStartGame.setBounds(10, 266, 231, 40);
+		panelGameInfo.add(btnStartGame);
 	}
 	
 	private void createPanelStatus() {
-		JPanel panelGameStatus = new JPanel();
+		panelGameStatus = new JPanel();
 		panelGameStatus.setLayout(null);
 		panelGameStatus.setBounds(654, 10, 251, 350);
 		panelGameStatus.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
@@ -152,10 +171,36 @@ public class Interface {
 		lblTitleRecords.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitleRecords.setBounds(10, 105, 231, 13);
 		panelGameStatus.add(lblTitleRecords);
-
-		JTable tblRecords = new JTable();
-		tblRecords.setBounds(10, 123, 231, 217);
-		panelGameStatus.add(tblRecords);
+		
+		JScrollPane tableRecords = createScorePanel(CTR.getSavedScores());
+		panelGameStatus.add(tableRecords);
+	}
+	
+	protected JScrollPane createScorePanel(String[] savedScores) {
+		String[] columnas = {"Posicion", "Jugador", "Tamaño", "Turno"};
+						
+		JTable table = new JTable();
+		DefaultTableModel tableModel = new DefaultTableModel(0, 0);
+		tableModel.setColumnIdentifiers(columnas);
+		for(int i=0; i < savedScores.length; i++) {
+			String posicion = Integer.toString(i+1);
+			String jugador = savedScores[i].substring(0,3);
+			String tamano = savedScores[i].substring(4,6);
+			String turno = savedScores[i].substring(7,10);
+			tableModel.addRow(new Object[] {posicion,jugador,tamano, turno});
+		}
+		table.setModel(tableModel);
+		
+		DefaultTableCellRenderer tableCR = new DefaultTableCellRenderer();
+		tableCR.setHorizontalAlignment(SwingConstants.CENTER);
+		for(int c=0; c < columnas.length; c++) {
+			table.getColumnModel().getColumn(c).setCellRenderer(tableCR);
+		}
+		
+		JScrollPane tablePanel = new JScrollPane(table); 
+		tablePanel.setBounds(10, 123, 231, 183);
+		
+		return tablePanel;
 	}
 	
 	public void createPanelLights(Integer sizeBoard) {
@@ -217,12 +262,29 @@ public class Interface {
 
 	private void endGame() {		
 		JPanel panelGanaste = new JPanel();
-		panelGanaste.setLayout(new GridLayout());
-		JLabel lblGanaste = new JLabel("Ganaste");
+		panelGanaste.setLayout(null);
+		
+		JLabel lblGanaste = new JLabel("¡¡Felicitaciones, juego completo!!");
+		lblGanaste.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblGanaste.setBounds(10, 10, 380, 45);
 		lblGanaste.setHorizontalAlignment(SwingConstants.CENTER);
 		panelGanaste.add(lblGanaste);
 		
-		frame.setBounds(100, 200, 600, 500);
+		if( CTR.checkNewScore(txtPlayer.getText()) ){
+			JLabel lblnewRecord = new JLabel("¡¡Superaste una marca registrada!!");
+			lblnewRecord.setFont(new Font("Tahoma", Font.BOLD, 13));
+			lblnewRecord.setBounds(10, 30, 380, 30);
+			lblnewRecord.setHorizontalAlignment(SwingConstants.CENTER);
+			panelGanaste.add(lblnewRecord);
+			
+			lblGanaste.setBounds(10, 10, 380, 30);
+		}
+
+		JScrollPane tableRecords = createScorePanel(CTR.getSavedScores());
+		tableRecords.setBounds(10, 60, 370, 183);
+		panelGanaste.add(tableRecords);
+		
+		frame.setBounds(100, 200, 400, 300);
 		frame.getContentPane().setLayout(new GridLayout());
 		frame.getContentPane().removeAll();
 		frame.getContentPane().add(panelGanaste);

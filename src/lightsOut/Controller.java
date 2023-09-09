@@ -3,8 +3,15 @@ package lightsOut;
 public class Controller {
 	Main MN;
 
-	public Controller(Integer size) {
-		MN = new Main(size);
+	public Controller() {
+		MN = new Main();
+	}
+	
+	public void createBoard(Integer sizeBoard) {
+		MN.createPreconfiguredBoard(sizeBoard);
+//		MN.createRandomBoard(sizeBoard);
+//		MN.createLightsOffBoard(sizeBoard);
+//		MN.createBoard(sizeBoard);
 	}
 
 	public boolean[][] getBoard() {
@@ -50,4 +57,13 @@ public class Controller {
 	public Integer getPercentCompleted() {
 		return MN.getPercentCompleted();
 	}
+
+	public String[] getSavedScores() {
+		return MN.getSavedScores();
+	}
+	
+	public boolean checkNewScore(String player) {
+		return MN.checkNewScore(player);
+	}
+	
 }
