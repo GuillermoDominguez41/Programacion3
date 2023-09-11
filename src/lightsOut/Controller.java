@@ -8,10 +8,7 @@ public class Controller {
 	}
 	
 	public void createBoard(Integer sizeBoard) {
-		MN.createPreconfiguredBoard(sizeBoard);
-//		MN.createRandomBoard(sizeBoard);
-//		MN.createLightsOffBoard(sizeBoard);
-//		MN.createBoard(sizeBoard);
+		MN.createBoard(sizeBoard);
 	}
 
 	public boolean[][] getBoard() {
@@ -64,6 +61,18 @@ public class Controller {
 	
 	public boolean checkNewScore(String player) {
 		return MN.checkNewScore(player);
+	}
+	
+	public Integer getRowSolution() {
+		return MN.getRowSolution();
+	}
+	
+	public Integer getColSolution() {
+		return MN.getColSolution();
+	}
+	
+	public void updateStackSolution(String position) {
+		MN.updateStackSolution(position);
 	}
 	
 }
